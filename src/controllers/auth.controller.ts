@@ -8,11 +8,13 @@ export const register = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { email, password, username } = req.body;
-  if (!email || !password || !username) {
-    return next(new CustomError(400, "All fields are required"));
-  }
   try {
+    const { email, password, username } = req.body;
+
+    if (!email || !password || !username) {
+      return next(new CustomError(400, "All fields are required"));
+    }
+
     const existingUser = await getUserByEmail(email);
     if (existingUser) {
       return next(new CustomError(400, "User already exists"));
@@ -31,7 +33,7 @@ export const register = async (
       },
     });
 
-    return res.status(201).json(newUser);
+    res.status(201).json({ message: "Successfully registered", user: newUser });
   } catch (error) {
     next(new CustomError(500, "Failed to register user"));
   }
