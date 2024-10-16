@@ -1,9 +1,9 @@
-import express from "express";
+import { Router } from "express";
 import auth from "./auth.router";
 
-const router = express.Router();
+const router: Router = Router();
 
-export default (): express.Router => {
+export default (): Router => {
   auth(router);
 
   return router;

@@ -6,7 +6,3 @@ const auth = (router: Router) => {
 };
 
 export default auth;
-
-// const router = Router();
-// router.post("/auth/register", register);
-// export default router;
