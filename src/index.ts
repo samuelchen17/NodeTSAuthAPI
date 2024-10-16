@@ -6,6 +6,7 @@ import compression from "compression";
 import cors from "cors";
 import connectDB from "./database/connectDB.database";
 import { errorHandler } from "./utils/errorHandler.utils";
+import router from "./router/index.router";
 
 const app = express();
 
@@ -26,5 +27,7 @@ server.listen(8080, () => {
 });
 
 connectDB(); // connect to DB
+
+app.use("/", router());
 
 app.use(errorHandler);
