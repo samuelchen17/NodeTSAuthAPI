@@ -4,8 +4,7 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import compression from "compression";
 import cors from "cors";
-import mongoose from "mongoose";
-import dotenv from "dotenv"
+import connectDB from "./database/connectDB.database";
 
 const app = express();
 
@@ -25,10 +24,4 @@ server.listen(8080, () => {
   console.log("Server running on localhost:8080");
 });
 
-dotenv.config() // load env variables
-
-const connectDB = async()=>{
-    try{
-        if()
-    }
-}
+connectDB(); // connect to DB

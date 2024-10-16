@@ -1,4 +1,4 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 import dotenv from "dotenv";
 
 dotenv.config(); // load env variables
@@ -17,3 +17,7 @@ const connectDB = async () => {
 };
 
 export default connectDB;
+
+// mongoose.Promise = Promise;
+// mongoose.connect(process.env.MONGODB_URL);
+// mongoose.connection.on("error", (error: Error) => console.log(error));
