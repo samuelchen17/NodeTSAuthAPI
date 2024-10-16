@@ -1,11 +1,19 @@
 import { User } from "../models/user.model";
-import { handleError } from "../utils/errorHandler.utils";
+import { userServiceErrorHandler } from "../utils/errorHandler.utils";
+
+export const getUsers = async () => {
+  try {
+    return await User.find();
+  } catch (error) {
+    userServiceErrorHandler(error, "Unable to get users");
+  }
+};
 
 export const getUserByEmail = async (email: string) => {
   try {
     return await User.findOne({ email });
   } catch (error) {
-    handleError(error, "Unable to get user by email");
+    userServiceErrorHandler(error, "Unable to get user by email");
   }
 };
 
@@ -13,7 +21,7 @@ export const getUserBySessionToken = async (sessionToken: string) => {
   try {
     return await User.findOne({ "authentication.sessionToken": sessionToken });
   } catch (error) {
-    handleError(error, "Unable to get user by session token");
+    userServiceErrorHandler(error, "Unable to get user by session token");
   }
 };
 
@@ -21,7 +29,7 @@ export const getUserById = async (id: string) => {
   try {
     return await User.findById(id);
   } catch (error) {
-    handleError(error, "Unable to get user by ID");
+    userServiceErrorHandler(error, "Unable to get user by ID");
   }
 };
 
@@ -31,7 +39,7 @@ export const createUser = async (values: Record<string, any>) => {
     await user.save();
     return user;
   } catch (error) {
-    handleError(error, "Unable to create user");
+    userServiceErrorHandler(error, "Unable to create user");
   }
 };
 
@@ -39,7 +47,7 @@ export const deleteUserById = async (id: string) => {
   try {
     return await User.findOneAndDelete({ _id: id });
   } catch (error) {
-    handleError(error, "Unable to delete user by ID");
+    userServiceErrorHandler(error, "Unable to delete user by ID");
   }
 };
 
@@ -53,7 +61,7 @@ export const updateUserById = async (
       runValidators: true,
     });
   } catch (error) {
-    handleError(error, "Unable to update user by ID");
+    userServiceErrorHandler(error, "Unable to update user by ID");
   }
 };
 

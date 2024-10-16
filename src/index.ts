@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import compression from "compression";
 import cors from "cors";
 import connectDB from "./database/connectDB.database";
+import { errorHandler } from "./utils/errorHandler.utils";
 
 const app = express();
 
@@ -25,3 +26,5 @@ server.listen(8080, () => {
 });
 
 connectDB(); // connect to DB
+
+app.use(errorHandler);
