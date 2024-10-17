@@ -51,7 +51,8 @@ export const login = async (
       return next(new CustomError(400, "All fields are required"));
     }
 
-    const user = await getUserByEmail(email).select(
+    const user = await getUserByEmail(
+      email,
       "authentication.salt + authentication.password"
     );
 
@@ -59,19 +60,40 @@ export const login = async (
       return next(new CustomError(400, "User not found"));
     }
 
+    // check if these properties exist so that it cannot be undefined
+    if (!user.authentication.salt || !user.authentication.password) {
+      return next(new CustomError(500, "Authentication data is missing"));
+    }
+
+    // compare hash to check password
     const expectedHash = authentication(user.authentication.salt, password);
 
     if (user.authentication.password !== expectedHash) {
       next(new CustomError(403, "Incorrect email or password"));
     }
 
+    // add sessionToken to user in db
     const salt = random();
     user.authentication.sessionToken = authentication(
       salt,
       user._id.toString()
     );
-
+    // save session token
     await user.save();
+
+    // deployment
+    // const cookieDomain = process.env.NODE_ENV === 'production' ? 'yourdomain.com' : 'localhost';
+
+    res.cookie("motoBlogAuthToken", user.authentication.sessionToken, {
+      domain: "localhost",
+      path: "/",
+      httpOnly: true, // prevent JS access to cookie to reduce XSS attacks
+      secure: false, // set to true if using https
+      //   secure: process.env.NODE_ENV === 'production', // Use secure cookies only in production
+      maxAge: 3600000,
+    });
+
+    res.status(200).json({ message: "Successfully logged in", user: user });
   } catch (error) {
     next(new CustomError(500, "Failed to log user in"));
   }

@@ -9,9 +9,18 @@ export const getUsers = async () => {
   }
 };
 
-export const getUserByEmail = async (email: string) => {
+export const getUserByEmail = async (
+  email: string,
+  selectParameter?: string
+) => {
   try {
-    return await User.findOne({ email });
+    let query = User.findOne({ email });
+
+    if (selectParameter) {
+      query = query.select(selectParameter);
+    }
+
+    return await query;
   } catch (error) {
     userServiceErrorHandler(error, "Unable to get user by email");
   }
