@@ -86,10 +86,11 @@ export const login = async (
 
     res.cookie("motoBlogAuthToken", user.authentication.sessionToken, {
       domain: "localhost",
-      path: "/",
+      path: "/", // cookie valid for all paths
       httpOnly: true, // prevent JS access to cookie to reduce XSS attacks
       secure: false, // set to true if using https
-      //   secure: process.env.NODE_ENV === 'production', // Use secure cookies only in production
+      // secure: process.env.NODE_ENV === 'production', // Use secure cookies only in production
+      // sameSite: "Strict", // helps prevent csrf attacks
       maxAge: 3600000,
     });
 
