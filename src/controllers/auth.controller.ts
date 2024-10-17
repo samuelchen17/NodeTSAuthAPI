@@ -1,5 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { createUser, getUserByEmail } from "../services/user.services";
+import {
+  createUser,
+  getUserByEmail,
+  getUserByUsername,
+} from "../services/user.services";
 import { random, authentication } from "../utils/user.utils";
 import { CustomError } from "../utils/errorHandler.utils";
 
@@ -16,8 +20,13 @@ export const register = async (
     }
 
     const existingUser = await getUserByEmail(email);
+    const existingUsername = await getUserByUsername(username);
+
     if (existingUser) {
-      return next(new CustomError(400, "User already exists"));
+      return next(new CustomError(400, "Email already in use"));
+    }
+    if (existingUsername) {
+      return next(new CustomError(400, "Username already in use"));
     }
 
     // generate salt and hash pw

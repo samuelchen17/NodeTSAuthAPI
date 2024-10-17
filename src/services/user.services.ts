@@ -26,6 +26,14 @@ export const getUserByEmail = async (
   }
 };
 
+export const getUserByUsername = async (username: string) => {
+  try {
+    return await User.findOne({ username });
+  } catch (error) {
+    userServiceErrorHandler(error, "Unable to get user by username");
+  }
+};
+
 export const getUserBySessionToken = async (sessionToken: string) => {
   try {
     return await User.findOne({ "authentication.sessionToken": sessionToken });

@@ -3,6 +3,7 @@ import {
   deleteUserById,
   getUserByEmail,
   getUserById,
+  getUserByUsername,
   getUsers,
 } from "../services/user.services";
 import { CustomError } from "../utils/errorHandler.utils";
@@ -51,13 +52,15 @@ export const updateUsername = async (
     const { username } = req.body;
 
     if (!username) {
-      next(new CustomError(404, "User does not exist"));
+      next(new CustomError(404, "Please fill out all fields"));
     }
 
     const user = await getUserById(id);
 
-    if (!user) {
-      next(new CustomError(404, "User does not exist"));
+    const existingUsername = await getUserByUsername(username);
+
+    if (existingUsername) {
+      return next(new CustomError(400, "Username already in use"));
     }
 
     user!.username = username;
