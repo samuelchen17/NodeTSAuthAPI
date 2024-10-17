@@ -38,3 +38,41 @@ export const register = async (
     next(new CustomError(500, "Failed to register user"));
   }
 };
+
+export const login = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return next(new CustomError(400, "All fields are required"));
+    }
+
+    const user = await getUserByEmail(email).select(
+      "authentication.salt + authentication.password"
+    );
+
+    if (!user) {
+      return next(new CustomError(400, "User not found"));
+    }
+
+    const expectedHash = authentication(user.authentication.salt, password);
+
+    if (user.authentication.password !== expectedHash) {
+      next(new CustomError(403, "Incorrect email or password"));
+    }
+
+    const salt = random();
+    user.authentication.sessionToken = authentication(
+      salt,
+      user._id.toString()
+    );
+
+    await user.save();
+  } catch (error) {
+    next(new CustomError(500, "Failed to log user in"));
+  }
+};

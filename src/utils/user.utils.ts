@@ -1,5 +1,6 @@
 import crypto from "crypto";
 
+// change secret
 const SECRET = "test";
 
 export const random = () => crypto.randomBytes(128).toString("base64");
