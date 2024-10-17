@@ -2,21 +2,22 @@ import { Request, Response, NextFunction } from "express";
 import { get, identity, merge } from "lodash";
 import { getUserBySessionToken } from "../services/user.services";
 import { CustomError } from "../utils/errorHandler.utils";
+import { ObjectId } from "mongoose";
 
-export const isAdmin = async (
+export const isOwner = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
     const { id } = req.params;
-    const currentUserId = get(req, "identity._id");
+    const currentUserId = get(req, "identity._id") as string | undefined;
 
     if (!currentUserId) {
       return next(new CustomError(403, "User ID is missing"));
     }
 
-    if (currentUserId !== id) {
+    if (currentUserId.toString() !== id) {
       next(new CustomError(403, "User is not authorized"));
     }
 
