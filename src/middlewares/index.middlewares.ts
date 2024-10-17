@@ -3,6 +3,29 @@ import { get, identity, merge } from "lodash";
 import { getUserBySessionToken } from "../services/user.services";
 import { CustomError } from "../utils/errorHandler.utils";
 
+export const isAdmin = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+    const currentUserId = get(req, "identity._id");
+
+    if (!currentUserId) {
+      return next(new CustomError(403, "User ID is missing"));
+    }
+
+    if (currentUserId !== id) {
+      next(new CustomError(403, "User is not authorized"));
+    }
+
+    next();
+  } catch (error) {
+    next(new CustomError(400, "User is not authenticated"));
+  }
+};
+
 export const isAuthenticated = async (
   req: Request,
   res: Response,

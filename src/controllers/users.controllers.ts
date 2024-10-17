@@ -30,6 +30,10 @@ export const deleteUser = async (
 
     const deletedUser = await deleteUserById(id);
 
+    if (!deletedUser) {
+      res.status(404).json({ message: "User does not exist" });
+    }
+
     res.status(200).json({ message: "User deleted", deletedUser: deletedUser });
   } catch (error) {
     next(new CustomError(400, "Unable to to delete user"));
