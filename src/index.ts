@@ -4,7 +4,7 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import compression from "compression";
 import cors from "cors";
-import connectDB from "./database/connectDB.database";
+import connectDB from "./database/index.database";
 import { errorHandler } from "./utils/errorHandler.utils";
 import router from "./router/index.router";
 
